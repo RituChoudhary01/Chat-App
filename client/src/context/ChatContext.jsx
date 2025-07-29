@@ -31,7 +31,7 @@ export const ChatProvider = ({children})=>{
     try{
       const {data} = await axios.get(`/api/messages/${userId}`);
       if(data.success){
-        setMessages(data.message || [])
+        setMessages(data.messages)
       }
     }catch(error){
       toast.error(error.message)  

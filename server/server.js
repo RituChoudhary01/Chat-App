@@ -36,9 +36,6 @@ app.use(cors());
 app.use('/api/status',(req , res)=>res.send("Quick chat Server is live"));
 app.use('/api/auth',userRouter)
 app.use('/api/messages',messageRouter)
-
-
-
 connectDB();
 if(process.env.NODE_ENV !== 'production'){
 const PORT = process.env.PORT || 5000;
