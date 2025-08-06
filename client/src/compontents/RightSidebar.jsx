@@ -26,10 +26,10 @@ function RightSidebar() {
     <hr className='border-[#ffffff50] my-4'/>
     <div className='px-5 text-xs'>
     <p>Media</p>
-    <div className='mt-2 max-h-[200px] overflow-y-scroll grid grid-cols-2 gap-4 opacity-80'>
+    <div className='mt-2 max-h-[200px] overflow-y-auto grid grid-cols-2 gap-4 opacity-80'>
       {msgImages.map((url,index)=>(
-        <div key={index} onClick={()=>window.open(url)} className='cursor-pointer rounded'>
-        <img src={url} alt="image" className='h-full rounded-md'/>
+        <div key={index} onClick={()=>window.open(url)} className='cursor-pointer rounded overflow-hidden'>
+        <img src={url} alt="image" className='w-full h-auto rounded-md object-cover'/>
         </div>
       ))}
     </div>
