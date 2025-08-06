@@ -21,6 +21,7 @@ io.on('connection', (socket)=>{
   console.log('User Connected',userId);
   if(userId) userSocketMap[userId] = socket.id;
   // Emit online user to all connected clients
+  // io.emit('getOnlineUsers', Object.keys(userSocketMap));
   io.emit('getOnlineUsers', Object.keys(userSocketMap));
   socket.on('disconnect',()=>{
     console.log('User Disconnected', userId);
@@ -41,8 +42,5 @@ if(process.env.NODE_ENV !== 'production'){
 const PORT = process.env.PORT || 5000;
 server.listen(PORT,()=>console.log('Server is running on PORT: ' + PORT))
 }
-const PORT = process.env.PORT || 5000;
-server.listen(PORT,()=>console.log('Server is running on PORT: ' + PORT))
-
 // Export server for vercel
 export default server;
