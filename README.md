@@ -51,5 +51,29 @@
 - ☁️ Cloudinary for image storage
 
 ---
+## images
+<img width="1470" height="827" alt="Screenshot 2025-08-07 at 3 39 06 AM" src="https://github.com/user-attachments/assets/c3b147db-bb40-4e4e-a7c8-640a72e69c3f" />
+
+<img width="1470" height="827" alt="Screenshot 2025-08-07 at 3 39 16 AM" src="https://github.com/user-attachments/assets/074e8ed1-90b0-4916-84ff-1372d4b9d647" />
+
+<img width="1470" height="827" alt="Screenshot 2025-08-07 at 4 03 51 AM" src="https://github.com/user-attachments/assets/fdeff912-1493-4f8b-b132-5d5a3a7baa23" />
+
+<img width="1470" height="827" alt="Screenshot 2025-08-07 at 4 03 56 AM" src="https://github.com/user-attachments/assets/724be8fe-eb46-4fa9-8c6b-93c2b92fa3a7" />
+
+<img width="1104" height="718" alt="Screenshot 2025-08-07 at 4 04 34 AM" src="https://github.com/user-attachments/assets/58a482f2-6341-4541-bf3d-6c7c1cd55815" />
+
+<img width="1470" height="837" alt="Screenshot 2025-08-07 at 4 10 24 AM" src="https://github.com/user-attachments/assets/274ef052-f99d-4c53-8571-4ae306e3e094" />
+
+<img width="1470" height="837" alt="Screenshot 2025-08-07 at 4 10 41 AM" src="https://github.com/user-attachments/assets/d5a4cb55-7265-4397-9082-fec1573b8eb7" />
+
+<img width="1470" height="837" alt="Screenshot 2025-08-07 at 4 11 54 AM" src="https://github.com/user-attachments/assets/971c4098-78b5-44ee-994d-a52bbd6b7f51" />
+
+<img width="1470" height="837" alt="Screenshot 2025-08-07 at 4 12 30 AM" src="https://github.com/user-attachments/assets/1c71536f-20a8-40fc-a9b3-e5ae2b33b92a" />
+
+
+
+
+
+
 
 
