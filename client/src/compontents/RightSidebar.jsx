@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import assets, { imagesDummyData } from '../assets/assets'
 import { ChatContext } from '../context/ChatContext'
 import { AuthContext } from '../context/AuthContext'
-
+// 
 function RightSidebar() {
   const {selectedUser,messages} = useContext(ChatContext)
   const {logout, onlineUsers} = useContext(AuthContext)
