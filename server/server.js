@@ -32,8 +32,8 @@ io.emit('getOnlineUser',Object.keys(userSocketMap))
 // Middleware setup
 app.use(express.json({limit:'4mb'}));
 app.use(cors());
-
-app.use('/api/status',(req , res)=>res.send("Quick chat Server is live"));
+app.get('/',(req,res)=>res.send('Quick chat Server is live'))
+// app.use('/api/status',(req , res)=>res.send("Quick chat Server is live"));
 app.use('/api/auth',userRouter)
 app.use('/api/messages',messageRouter)
 connectDB();
@@ -41,5 +41,8 @@ if(process.env.NODE_ENV !== 'production'){
 const PORT = process.env.PORT || 5000;
 server.listen(PORT,()=>console.log('Server is running on PORT: ' + PORT))
 }
+const PORT = process.env.PORT || 5000;
+server.listen(PORT,()=>console.log('Server is running on PORT: ' + PORT))
+
 // Export server for vercel
 export default server;
