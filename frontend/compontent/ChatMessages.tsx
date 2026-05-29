@@ -15,13 +15,13 @@ function ChatMessages({ selectedUser, messages, loggedInUser }: ChatMessagesProp
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const uniqueMessages = useMemo(() => {
-    if (!messages) return []
-    const seen = new Set()
+    if (!messages) return [];
+    const seen = new Set();
     return messages.filter((message) => {
       if (seen.has(message._id)) return false;
-      seen.add(message._id)
+      seen.add(message._id);
       return true;
-    })
+    });
   }, [messages]);
 
   useEffect(() => {
@@ -35,6 +35,11 @@ function ChatMessages({ selectedUser, messages, loggedInUser }: ChatMessagesProp
           <p className='text-gray-400 text-center mt-20'>
             Please select a user to start chatting
           </p>
+        ) : uniqueMessages.length === 0 ? (
+          // ✅ FIX: show empty state instead of blank screen when no messages yet
+          <p className='text-gray-400 text-center mt-20'>
+            No messages yet. Say hi! 👋
+          </p>
         ) : (
           <>
             {uniqueMessages.map((e, i) => {
@@ -45,7 +50,11 @@ function ChatMessages({ selectedUser, messages, loggedInUser }: ChatMessagesProp
                   className={`flex flex-col gap-1 mt-2 ${isSentByMe ? "items-end" : "items-start"}`}
                   key={uniqueKey}
                 >
-                  <div className={`rounded-lg p-3 max-w-sm ${isSentByMe ? "bg-blue-600 text-white" : "bg-gray-700 text-white"}`}>
+                  <div
+                    className={`rounded-lg p-3 max-w-sm ${
+                      isSentByMe ? "bg-blue-600 text-white" : "bg-gray-700 text-white"
+                    }`}
+                  >
                     {e.messageType === "image" && e.image && (
                       <div className='relative group'>
                         <img
@@ -58,8 +67,14 @@ function ChatMessages({ selectedUser, messages, loggedInUser }: ChatMessagesProp
                     {e.text && <p className='mt-1'>{e.text}</p>}
                   </div>
 
-                  <div className={`flex items-center gap-1 text-xs text-gray-400 ${isSentByMe ? "pr-2 flex-row-reverse" : "pl-2"}`}>
-                    <span>{moment(e.createdAt).format("hh:mm A . MMM D")}</span>
+                  <div
+                    className={`flex items-center gap-1 text-xs text-gray-400 ${
+                      isSentByMe ? "pr-2 flex-row-reverse" : "pl-2"
+                    }`}
+                  >
+                    <span>{moment(e.createdAt).format("hh:mm A · MMM D")}</span>
+
+                    {/* ✅ FIX: tick icons only shown for messages sent by me */}
                     {isSentByMe && (
                       <div className='flex items-center ml-1'>
                         {e.seen ? (
@@ -70,20 +85,21 @@ function ChatMessages({ selectedUser, messages, loggedInUser }: ChatMessagesProp
                             )}
                           </div>
                         ) : (
+                          // ✅ single grey tick = sent but not seen
                           <Check className='w-3 h-3 text-gray-500' />
                         )}
                       </div>
                     )}
                   </div>
                 </div>
-              )
+              );
             })}
             <div ref={bottomRef} />
           </>
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export default ChatMessages
+export default ChatMessages;

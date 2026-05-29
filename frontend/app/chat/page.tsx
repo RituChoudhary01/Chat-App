@@ -25,7 +25,7 @@ export interface Message {
   };
   messageType: "text" | "image";
   seen: boolean;
-  seenAt?: string;
+  seenAt?: string | null;
   createdAt: string;
 }
 
@@ -49,12 +49,15 @@ interface LatestMessage {
 
 // ── API response types ────────────────────────────────────────────────────────
 
+// ✅ FIX: backend returns "messages" (plural), not "message"
+// Confirmed from API response: { messages: [...], user: {...} }
 interface FetchChatResponse {
-  message: Message[];
+  messages: Message[];
   user: User;
 }
 
 interface SendMessageResponse {
+  // ✅ FIX: backend returns "message" (singular) for send — keep as-is
   message: Message;
 }
 
@@ -88,8 +91,8 @@ function ChatApp() {
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeOutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // ── FIX: Store fetchChats in a ref so it never becomes a useCallback/useEffect dependency.
-  // This breaks the render → new fetchChats ref → re-run effect → infinite loop cycle.
+  // ✅ FIX: store fetchChats in a ref — prevents infinite re-render loop
+  // because fetchChats gets a new reference on every render from context
   const fetchChatsRef = useRef(fetchChats);
   useEffect(() => {
     fetchChatsRef.current = fetchChats;
@@ -155,8 +158,6 @@ function ChatApp() {
 
   // ── Fetch messages for selected chat ─────────────────────────────────────
 
-  // FIX: fetchChats is intentionally excluded from deps (via ref) to prevent
-  // infinite re-render loop. fetchChatsRef.current always holds the latest version.
   const fetchChat = useCallback(async (chatId: string) => {
     const token = Cookies.get("token");
     try {
@@ -164,14 +165,15 @@ function ChatApp() {
         `${chat_service}/api/v1/message/${chatId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMessages(data.message);
+      // ✅ FIX: use data.messages (plural) — this is why messages erased on refresh!
+      // Backend returns { messages: [...], user: {...} }
+      setMessages(data.messages);
       setUser(data.user);
-      // Use ref to avoid adding fetchChats to deps
       await fetchChatsRef.current();
     } catch {
       toast.error("Failed to load messages.");
     }
-  }, []); // ← stable forever; no deps that change
+  }, []); // stable forever — no deps
 
   // ── Send message ──────────────────────────────────────────────────────────
 
@@ -322,8 +324,6 @@ function ChatApp() {
   useEffect(() => {
     if (!selectedUser) return;
 
-    // FIX: pass chatId as argument — fetchChat is now stable and takes chatId directly,
-    // removing the need for selectedUser in its deps and breaking the infinite loop.
     fetchChat(selectedUser);
     setIsTyping(false);
     resetUnseenCount(selectedUser);
@@ -332,8 +332,6 @@ function ChatApp() {
     return () => {
       socket?.emit("leaveChat", selectedUser);
     };
-    // fetchChat is stable (no deps), resetUnseenCount is stable (only setChats in deps)
-    // so this effect only re-runs when selectedUser or socket actually changes.
   }, [selectedUser, socket, fetchChat, resetUnseenCount]);
 
   // ── Typing timeout cleanup ────────────────────────────────────────────────
@@ -343,6 +341,24 @@ function ChatApp() {
       if (typingTimeOutRef.current) clearTimeout(typingTimeOutRef.current);
     };
   }, []);
+
+  // ── Create new chat ───────────────────────────────────────────────────────
+
+  async function createChat(u: User) {
+    try {
+      const token = Cookies.get("token");
+      const { data } = await axios.post<CreateChatResponse>(
+        `${chat_service}/api/v1/chat/new`,
+        { otherUserId: u._id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setSelectedUser(data.chatId);
+      setShowAllUser(false);
+      await fetchChatsRef.current();
+    } catch {
+      toast.error("Failed to create chat.");
+    }
+  }
 
   // ── Render ────────────────────────────────────────────────────────────────
 
@@ -391,24 +407,6 @@ function ChatApp() {
       </div>
     </div>
   );
-
-  // ── Create new chat ───────────────────────────────────────────────────────
-
-  async function createChat(u: User) {
-    try {
-      const token = Cookies.get("token");
-      const { data } = await axios.post<CreateChatResponse>(
-        `${chat_service}/api/v1/chat/new`,
-        { otherUserId: u._id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setSelectedUser(data.chatId);
-      setShowAllUser(false);
-      await fetchChatsRef.current();
-    } catch {
-      toast.error("Failed to create chat.");
-    }
-  }
 }
 
 export default ChatApp;
